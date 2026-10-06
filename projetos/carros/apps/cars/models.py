@@ -44,6 +44,19 @@ class Car(BaseModel):
         max_length=255,
         verbose_name='Nome'
     )
+    plate = models.CharField(
+        max_length=10,
+        unique=True,
+        verbose_name='Placa',
+        blank=True,
+        null=True
+    )
+    image = models.ImageField(
+        upload_to='cars/',
+        verbose_name='Imagem',
+        blank=True,
+        null=True
+    )
     factory_year = models.PositiveIntegerField(
         verbose_name='Ano de Fabricação',
         blank=True,
