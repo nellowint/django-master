@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="card p-4">
+            <h4>Login</h4>
+            <div class="form-floating mt-3 mb-3">
+                <input type="text" class="form-control" id="username" placeholder="Informe o usuário" name="username">
+                <label for="username">Usuário</label>
+                {{ form.username.erros }}
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" placeholder="Informe a senha" name="password">
+                <label for="password">Senha</label>
+                {{ form.password.erros }}
+            </div>
+
+            <div class="mb-3 mt-3">
+                <input type="submit" class="btn btn-primary" value="Entrar">
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Não possui conta?</label>
+                    <a href="{% url 'accounts:register_view' %}">Criar Conta</a>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

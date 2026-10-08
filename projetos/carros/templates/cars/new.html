@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="card p-4">
+            <div class="mb-3 mt-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="name" class="form-label">Carro</label>
+                        <input type="text" class="form-control" id="name" placeholder="Nome do carro" name="name">
+                        {{ form.name.errors }}
+                    </div>
+                        
+                    <div class="col">
+                        <label for="plate" class="form-label">Placa</label>
+                        <input type="text" class="form-control" id="plate" placeholder="Placa do carro" name="plate">
+                        {{ form.plate.errors }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col">
+                        <label for="factory_year" class="form-label">Ano de Fabricação</label>
+                        <input type="number" class="form-control" id="factory_year" placeholder="Ano de Fabricação" name="factory_year">
+                        {{ form.factory_year.errors }}
+                    </div>
+                    <div class="col">
+                        <label for="model_year" class="form-label">Ano do Modelo</label>
+                        <input type="number" class="form-control" id="model_year" placeholder="Ano do Model" name="model_year">
+                        {{ form.model_year.errors }}
+                    </div>
+                    <div class="col">
+                        <label for="price" class="form-label">Preço R$</label>
+                        <input type="number" class="form-control" id="price" placeholder="Preço do carro em R$" name="price">
+                        {{ form.price.errors }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-3 mt-3">
+                <input type="reset" class="btn btn-secondary" value="Limpar">
+                <input type="submit" class="btn btn-success" value="Salvar">
+            </div>
+        </div>
+    </form>
+{% endblock %}
