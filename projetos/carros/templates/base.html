@@ -23,7 +23,7 @@
                             <li class="nav-item">
                                     <a class="nav-link" href="{% url 'cars:list_car' %}">Início</a>
                                 </li>
-                            {% if user.is_authenticate %}
+                            {% if user.is_authenticated %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'cars:new_car' %}">Cadastrar</a>
                                 </li>
@@ -33,10 +33,23 @@
                             <input class="form-control me-2" type="search" name="search" placeholder="Pesquisar carros...">
                         </form>
                         
-                        <div class="ml-2">
-                            <a class="navbar-brand" href="{% url 'accounts:login_view' %}">
-                                <img src="{% static 'img/avatar.png' %}" alt="User" style="width:40px;" class="rounded-pill"> 
-                            </a>
+                        <div class="ml-2 navbar-brand">
+                            {% if user.is_authenticated %}
+                                <div class="dropdown">
+                                    <div data-bs-toggle="dropdown">
+                                        <img src="{% static 'img/avatar.png' %}" alt="User" style="width:40px;" class="rounded-pill"> 
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Olá, {{ user.username }}</a></li>
+                                            <li><hr class="dropdown-divider"></hr></li>
+                                            <li><a class="dropdown-item" href="{% url 'accounts:logout_view' %}">Logout</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <a href="{% url 'accounts:login_view' %}">
+                                    <button class="btn btn-primary">Login</button>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

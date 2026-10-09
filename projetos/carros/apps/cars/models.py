@@ -18,27 +18,6 @@ class Brand(BaseModel):
         verbose_name = 'Marca'
         verbose_name_plural = 'Marcas'
 
-class Model(BaseModel):
-    name = models.CharField(
-        max_length=255,
-        unique=True,
-        verbose_name='Modelo'
-    )
-    brand = models.ForeignKey(
-        Brand,
-        on_delete=models.PROTECT,
-        verbose_name='Marca',
-        related_name='brands'
-    )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ['-created_at']
-        verbose_name = 'Modelo'
-        verbose_name_plural = 'Modelos'
-
 class Car(BaseModel):
     name = models.CharField(
         max_length=255,
@@ -74,11 +53,11 @@ class Car(BaseModel):
         blank=True,
         null=True
     )
-    model = models.ForeignKey(
-        Model,
+    brand = models.ForeignKey(
+        Brand,
         on_delete=models.PROTECT,
-        verbose_name='Modelo',
-        related_name='models'
+        verbose_name='Marca',
+        related_name='brands'
     )
 
     def __str__(self):

@@ -7,18 +7,25 @@
             <div class="form-floating mt-3 mb-3">
                 <input type="text" class="form-control" id="username" placeholder="Informe o usuário" name="username">
                 <label for="username">Usuário</label>
-                {{ form.username.erros }}
+            </div>
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" placeholder="Informe o email" name="email">
+                <label for="email">Email</label>
             </div>
             <div class="form-floating mb-3">
                 <input type="password" class="form-control" id="password1" placeholder="Informe a senha" name="password1">
                 <label for="password1">Senha</label>
-                {{ form.password1.erros }}
             </div>
             <div class="form-floating mb-3">
                 <input type="password" class="form-control" id="password2" placeholder="Repetir sua senha" name="password2">
                 <label for="password2">Repetir Senha</label>
-                {{ form.password2.erros }}
             </div>
+            {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible mb-3">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <strong>Erro!</strong> {{ form.errors }}
+                </div>
+            {% endif %}
 
             <div class="mb-3 mt-3">
                 <input type="reset" class="btn btn-secondary" value="Limpar">

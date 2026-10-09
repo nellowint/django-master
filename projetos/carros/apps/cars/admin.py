@@ -8,12 +8,7 @@ class BrandAdmin(admin.ModelAdmin):
     list_display = ['name', ]
     search_fields = ['name', ]
 
-@admin.register(Model)
-class ModelAdmin(admin.ModelAdmin):
-    list_display = ['name', 'brand']
-    search_fields = ['name', 'brand__name'] 
-
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ['name', 'plate', 'model', 'factory_year', 'model_year', 'price']
-    search_fields = ['name', 'model__name',]
+    list_display = ['name', 'plate', 'brand', 'factory_year', 'model_year', 'price']
+    search_fields = ['name', 'brand',]

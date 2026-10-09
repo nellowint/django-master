@@ -1,26 +1,41 @@
 
-from django.shortcuts import render, redirect
+from django.views.generic import (
+    CreateView, 
+    DeleteView,
+    DetailView,
+    ListView, 
+    UpdateView, 
+)
 from .models import Car
 from .forms import CarForm
 
+class ListViewCar(ListView):
+    model = Car
+    template_name = 'cars/list.html'
+    context_object_name = 'cars'
 
-def list_car(request):
-    search = request.GET.get('search')
-    if search:
-        cars = Car.objects.filter(name__icontains=search, is_active=True)
-    else:
-        cars = Car.objects.filter(is_active=True)
-    return render(request, 'cars/list.html', {'cars': cars})
+    def get_queryset(self):
+        cars = super().get_queryset().filter(is_active=True)
+        search = self.request.GET.get('search')
+        if search:
+            cars = cars.filter(name__icontains=search)
+        return cars
 
-def new_car(request):
-    if request.method == 'POST':
-        form = CarForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('list_car')
-    else:
-        form = CarForm()
-    return render(request, 'cars/new.html', { 'form': form })
+class CreateViewCar(CreateView):
+    model = Car
+    form_class = CarForm
+    template_name = 'cars/new.html'
+    success_url = '/'
 
-def edit_car(request, pk):
+class DetailViewCar(DetailView):
+    model = Car
+    template_name = 'cars/detail.html'
+
+class UpdateViewCar(UpdateView):
+    model = Car
+    form_class = CarForm
+    template_name = 'cars/update.html'
+    success_url = '/'
+
+class DeleteViewCar(DeleteView):
     pass

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detalhes{% endblock %}
+{% block content %}
+    {% if object.image.url is not None %}
+        <img src="{{ object.photo.url }}" alt="{{ object.name }} - {{ object.brand }}">
+    {% else %}
+        <img src="{% static 'img/default-car.png' %}" alt="{{ object.name }} - {{ object.brand }}">
+    {% endif %}
+    <h2>{{ object.brand }} {{ object.name }}</h2>
+    <p><strong>Ano de Fabricação:</strong> {{ object.factory_year }}</p>
+    <p><strong>Ano do Modelo:</strong> {{ object.model_year }}</p>
+    <p><strong>Placa:</strong> {{ object.plate }}</p>
+    <p><strong>Preço:</strong> R$ {{ object.price }}</p>
+{% endblock %}
