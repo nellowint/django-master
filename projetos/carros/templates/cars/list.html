@@ -5,17 +5,19 @@
     <div class="row">
         {% for car in cars %}
             <div class="col-4 mb-4">
-                <a href="{% url 'cars:detail_car' car.pk %}" style="text-decoration: none;">
+                <a href="{% url 'cars:detail_car' car.pk %}">
                     <div class="card">
-                        {% if car.image %}
-                            <img class="card-img-top" src="{{ car.image.url }}" alt="{{ car.name }}" style="width:100%">
+                        {% if car.image.url is not None %}
+                            <img src="{{ car.image.url }}" alt="{{ car.name }}" class="card-img-top card-img-car">
                         {% else %}
-                            <img class="card-img-top" src="{% static 'img/default-car.png' %}" alt="Car Image" style="width:100%">
+                            <img src="{% static 'img/default-car.png' %}" alt="{{ car.model.brand }} {{ car.name }}" class="card-img-top card-img-car">
                         {% endif %}
                         <div class="card-body">
-                            <h4 class="card-title">{{ car.model.brand }} {{ car.name }}</h4>
+                            <h4 class="card-title">{{ car.brand }} {{ car.name }}</h4>
                             {% if car.factory_year and car.model_year %}
                                 <p class="card-text">{{ car.factory_year }} - {{ car.model_year }}</p>
+                            {% else %}
+                                    <p class="card-text">Fabricação - Modelo</p>
                             {% endif %}
                             {% if car.price %}
                                 <h6 class="card-title">{{ car.price }}</h6>

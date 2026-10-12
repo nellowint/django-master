@@ -1,77 +1,70 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Novo Carro{% endblock %}
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        <div class="card p-4">
-            <div class="row">
-                <div class="mb-3">
-                    <div class"col">
-                        <img src="{{ form.image.url }}" class="rounded" alt="">
-                        <input type="file" class="form-control" accept="image/png, image/jpg, image/jpeg" name="image">
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col">
-                                <label for="name" class="form-label">Carro</label>
-                                <input type="text" class="form-control" id="name" placeholder="Nome do carro" name="name">
-                            </div>
-                                
-                            <div class="col">
-                                <label for="plate" class="form-label">Placa</label>
-                                <input type="text" class="form-control" id="plate" placeholder="Placa do carro" name="plate">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col">
-                                <label for="factory_year" class="form-label">Ano de Fabricação</label>
-                                <input type="number" class="form-control" id="factory_year" placeholder="Ano de Fabricação" name="factory_year">
-                            </div>
-
-                            <div class="col">
-                                <label for="model_year" class="form-label">Ano do Modelo</label>
-                                <input type="number" class="form-control" id="model_year" placeholder="Ano do Model" name="model_year">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col">
-                                <label for="price" class="form-label">Preço R$</label>
-                                <input type="number" class="form-control" id="price" placeholder="Preço do carro em R$" name="price">
-                            </div>
-
-                            <div class="col">
-                                {{ form.brand }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card p-4">
+    <div class="row">
+            <div class="col">
+                <img src="{% static 'img/default-car.png' %}" alt="Car Image" style="width:100%">
+                <input type="file" class="form-control" accept="image/png, image/jpg, image/jpeg" name="image">
             </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="yes" checked>
-                <label class="form-check-label" for="is_active">Registro Ativo?</label>
-            </div>
-
-            {% if form.errors %}
-                <div class="alert alert-danger alert-dismissible mb-3">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    <strong>Erro!</strong> {{ form.errors }}
+            <div class="col">
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="name" class="form-label">Carro</label>
+                        <input type="text" class="form-control" id="name" placeholder="Nome do carro" name="name">
+                    </div>
+                        
+                    <div class="col">
+                        <label for="plate" class="form-label">Placa</label>
+                        <input type="text" class="form-control" id="plate" placeholder="Placa do carro" name="plate">
+                    </div>
                 </div>
-            {% endif %}
-            
-            <div class="mb-3 mt-3">
-                <input type="reset" class="btn btn-secondary" value="Limpar">
-                <input type="submit" class="btn btn-success" value="Salvar">
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="factory_year" class="form-label">Ano de Fabricação</label>
+                        <input type="number" class="form-control" id="factory_year" placeholder="Ano de Fabricação" name="factory_year">
+                    </div>
+
+                    <div class="col">
+                        <label for="model_year" class="form-label">Ano do Modelo</label>
+                        <input type="number" class="form-control" id="model_year" placeholder="Ano do Model" name="model_year">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="price" class="form-label">Preço R$</label>
+                        <input type="number" class="form-control" id="price" placeholder="Preço do carro em R$" name="price">
+                    </div>
+
+                    <div class="col">
+                        <label for="{{ form.brand.id_for_label }}" class="form-label">Marca</label>
+                        {{ form.brand }}
+                    </div>
+                </div>
+
+                 <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="yes" checked>
+                    <label class="form-check-label" for="is_active">Registro Ativo?</label>
+                </div>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible mb-3">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>Erro!</strong> {{ form.errors }}
+                    </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <input type="reset" class="btn btn-secondary" value="Limpar">
+                    <input type="submit" class="btn btn-success" value="Salvar">
+                </div>
             </div>
         </div>
-    </form>
+    </div>
+</form>
 {% endblock %}

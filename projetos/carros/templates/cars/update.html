@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Novo Carro{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="card p-4">
+    <div class="row">
+            <div class="col">
+                {% if object.image.url is not None %}
+                    <img src="{{ object.image.url }}" alt="{{ object.brand }} - {{ object.name }}" style="width:100%">
+                {% else %}
+                    <img src="{% static 'img/default-car.png' %}" alt="{{ object.brand }} - {{ object.name }}" style="width:100%">
+                {% endif %}
+                <input type="file" class="form-control mt-3 mb-3" accept="image/png, image/jpg, image/jpeg" name="image">
+            </div>
+            <div class="col">
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="name" class="form-label">Carro</label>
+                        <input type="text" class="form-control" id="name" placeholder="Nome do carro" name="name" value="{{ object.name }}">
+                    </div>
+                        
+                    <div class="col">
+                        <label for="plate" class="form-label">Placa</label>
+                        <input type="text" class="form-control" id="plate" placeholder="Placa do carro" name="plate" value="{{ object.plate|default_if_none:"" }}">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="factory_year" class="form-label">Ano de Fabricação</label>
+                        <input type="number" class="form-control" id="factory_year" placeholder="Ano de Fabricação" name="factory_year" value="{{ object.factory_year }}">
+                    </div>
+
+                    <div class="col">
+                        <label for="model_year" class="form-label">Ano do Modelo</label>
+                        <input type="number" class="form-control" id="model_year" placeholder="Ano do Model" name="model_year" value="{{ object.model_year }}">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="price" class="form-label">Preço R$</label>
+                        <input type="number" class="form-control" id="price" placeholder="Preço do carro em R$" name="price" value="{{ object.price }}">
+                    </div>
+
+                    <div class="col">
+                        <label for="{{ form.brand.id_for_label }}" class="form-label">Marca</label>
+                        {{ form.brand }}
+                    </div>
+                </div>
+
+                 <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked  value="{{ object.is_active }}">
+                    <label class="form-check-label" for="is_active">Registro Ativo?</label>
+                </div>
+
+                {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible mb-3">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <strong>Erro!</strong> {{ form.errors }}
+                    </div>
+                {% endif %}
+                
+                <div class="mt-3">
+                    <a href="{% url 'cars:detail_car' pk=object.pk %}" class="btn btn-secondary">Voltar</a>
+                    <a href="{% url 'cars:delete_car' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+                    <input type="submit" class="btn btn-success" value="Atualizar">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

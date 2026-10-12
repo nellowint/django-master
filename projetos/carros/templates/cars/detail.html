@@ -2,14 +2,29 @@
 {% load static %}
 {% block title %}Detalhes{% endblock %}
 {% block content %}
-    {% if object.image.url is not None %}
-        <img src="{{ object.photo.url }}" alt="{{ object.name }} - {{ object.brand }}">
-    {% else %}
-        <img src="{% static 'img/default-car.png' %}" alt="{{ object.name }} - {{ object.brand }}">
-    {% endif %}
-    <h2>{{ object.brand }} {{ object.name }}</h2>
-    <p><strong>Ano de Fabricação:</strong> {{ object.factory_year }}</p>
-    <p><strong>Ano do Modelo:</strong> {{ object.model_year }}</p>
-    <p><strong>Placa:</strong> {{ object.plate }}</p>
-    <p><strong>Preço:</strong> R$ {{ object.price }}</p>
+<div class="card p-4">
+    <div class="row">
+        <div class="col">
+            {% if object.image.url is not None %}
+                <img src="{{ object.image.url }}" alt="{{ object.name }} - {{ object.brand }}" class="rounded" style="width:100%">
+            {% else %}
+                <img src="{% static 'img/default-car.png' %}" alt="{{ object.name }} - {{ object.brand }}">
+            {% endif %}
+        </div>
+        <div class="col">
+            <h2>{{ object.brand }} {{ object.name }}</h2>
+            <p><strong>Ano de Fabricação:</strong> {{ object.factory_year }}</p>
+            <p><strong>Ano do Modelo:</strong> {{ object.model_year }}</p>
+            <p><strong>Placa:</strong> {{ object.plate }}</p>
+            <p><strong>Preço:</strong> R$ {{ object.price }}</p>    
+
+            {% if user.is_authenticated %}
+                <div class="mt-3">
+                    <a href="{% url 'cars:update_car' pk=object.pk %}" class="btn btn-primary">Editar</a>
+                    <a href="{% url 'cars:delete_car' pk=object.pk %}" class="btn btn-danger">Deletar</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
