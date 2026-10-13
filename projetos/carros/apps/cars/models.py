@@ -23,6 +23,11 @@ class Car(BaseModel):
         max_length=255,
         verbose_name='Nome'
     )
+    desc = models.TextField(
+        verbose_name='Descrição',
+        blank=True,
+        null=True,
+    )
     plate = models.CharField(
         max_length=10,
         unique=True,
@@ -68,3 +73,22 @@ class Car(BaseModel):
         verbose_name = 'Carro'
         verbose_name_plural = 'Carros'
 
+
+class CarInventory(BaseModel):
+    amount = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Quantidade'
+    )
+    value = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name='Valor',
+    )
+
+    def __str__(self):
+        return f'{self.amount} - {self.value}'
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Estoque'
+        verbose_name_plural = 'Estoque de Carros'
