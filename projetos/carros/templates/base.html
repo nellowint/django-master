@@ -35,19 +35,18 @@
                         <div class="ml-2 navbar-brand">
                             {% if user.is_authenticated %}
                                 <div class="dropdown">
-                                    <div data-bs-toggle="dropdown">
-                                        <img src="{% static 'img/avatar.png' %}" alt="User" style="width:40px;" class="rounded-pill"> 
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Olá, {{ user.username }}</a></li>
-                                            <li><hr class="dropdown-divider"></hr></li>
-                                            <li><a class="dropdown-item" href="{% url 'accounts:logout_view' %}">Logout</a></li>
-                                        </ul>
-                                    </div>
+                                    <button class="btn p-0 border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="{% static 'img/avatar.png' %}" alt="User" class="rounded-pill avatar-img">
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><span class="dropdown-item-text">Olá, {{ user.username }}</span></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="{% url 'accounts:logout_view' %}">Logout</a></li>
+                                    </ul>
                                 </div>
                             {% else %}
-                                <a href="{% url 'accounts:login_view' %}">
-                                    <button class="btn btn-primary">Login</button>
-                                </a>
+                                <a href="{% url 'accounts:login_view' %}" class="btn btn-primary">Login</a>
                             {% endif %}
                         </div>
                     </div>

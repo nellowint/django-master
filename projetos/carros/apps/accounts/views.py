@@ -12,8 +12,9 @@ def login_view(request):
         if user is not None:
             login(request, user)
             return redirect('cars:list_car')
-        else:
-            form = AuthenticationForm()
+        
+        form = AuthenticationForm(request, data=request.POST)
+        form.add_error(None, 'Usuário ou senha inválidos.')
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', { 'form': form } )
@@ -27,7 +28,7 @@ def register_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            redirect('accounts:login_view')
+            return redirect('accounts:login_view')
     else:
         form = UserCreationForm()
     return render(request, 'accounts/register.html', { 'form': form} )
