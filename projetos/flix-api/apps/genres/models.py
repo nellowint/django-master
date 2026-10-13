@@ -13,6 +13,6 @@ class Genre(BaseModel):
         return self.name
 
     class Meta():
-        ordering = ['name']
+        ordering = ['id']
         verbose_name = 'Gênero'
         verbose_name_plural = 'Gêneros'
