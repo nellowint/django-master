@@ -1,10 +1,9 @@
 
 from django.urls import path
-from .views import *
 
-app_name = 'genres'
+from . import views
 
 urlpatterns = [
-    path('', view_genres, name='view_genres'),
-    path('/<int:pk>/', detail_genres, name='detail_genres')
+    path('', views.GenreListCreateAPIView.as_view(), name='view_genres'),
+    path('<int:pk>/', views.GenreRetrieveUpdateDestroyAPIView.as_view(), name='detail_genres')
 ]

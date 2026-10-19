@@ -2,7 +2,6 @@
 from django.apps import AppConfig
 
 
-class FilmsConfig(AppConfig):
-    name = 'apps.films'
+class MoviesConfig(AppConfig):
+    name = 'apps.movies'
     verbose_name = 'Filmes'
-
