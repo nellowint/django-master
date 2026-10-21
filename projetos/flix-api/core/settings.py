@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_spectacular',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'apps.auths',
     'apps.actors',
     'apps.genres',
     'apps.movies',
@@ -127,9 +129,13 @@ MAILERS = {
 # https://docs.djangoproject.com/en/6.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# DRF Spectacular Config
+# JWT and DRF Spectacular Config
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
 # https://drf-spectacular.readthedocs.io/en/latest/readme.html#installation
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
@@ -138,4 +144,17 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Flix API',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SECURITY': [{
+        'BearerAuth': [],
+    }],
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'BearerAuth': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'Authorization',
+                'description': 'Bearer <seu_token_access>'
+            }
+        }
+    },
 }
