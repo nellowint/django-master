@@ -10,10 +10,7 @@ class CustomPermissions(permissions.BasePermission):
             method=request.method, 
             meta_class=view.queryset.model._meta
         )
-
-        if user_permission:
-            return request.user.has_perm(user_permission)
-        return False
+        return request.user.has_perm(user_permission) if user_permission else False
     
     def __get_user_permissions(self, method, meta_class):
         try:

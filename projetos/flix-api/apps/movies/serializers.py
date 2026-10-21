@@ -1,9 +1,11 @@
 
-from rest_framework import serializers
 from django.db.models import Avg
+from rest_framework import serializers
+
+from apps.reviews.models import Review
 
 from .models import Movie
-from apps.reviews.models import Review
+
 
 class MovieSerializer(serializers.ModelSerializer):
     rate = serializers.SerializerMethodField(
