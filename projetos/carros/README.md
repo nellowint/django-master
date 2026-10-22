@@ -1,6 +1,6 @@
-# Carros — CRUD Concessionária Django + IA Gemini
+# Carros — CRUD Concessionária Django
 
-Monolito Django MVT para cadastro e vitrine de carros: CRUD com upload de imagem, busca por nome, autenticação (login/registro), admin em PT-BR, inventário automático via signals e cliente Google Gemini para geração de descrições comerciais.
+Monolito Django MVT para cadastro e vitrine de carros: CRUD com upload de imagem, busca por nome, autenticação (login/registro), admin em PT-BR, inventário automático via signals e gancho comentado para descrições automáticas. O antigo cliente Gemini foi removido do código.
 
 Parte prática do curso [Django-Master PycodeBR](../../README.md).
 
@@ -14,7 +14,7 @@ Parte prática do curso [Django-Master PycodeBR](../../README.md).
 - Upload de imagens (`ImageField upload_to='cars/'`), servidas em `MEDIA_URL` no modo `DEBUG`
 - Inventário automático: cada `save`/`delete` de `Car` cria snapshot em `CarInventory` (quantidade + valor total)
 - Limpeza automática de arquivos de imagem antigos (troca e exclusão)
-- Descrição automática placeholder no `pre_save` quando vazia; integração Gemini pronta mas desativada (linha comentada)
+- Descrição placeholder no `pre_save` de um carro existente quando vazia; o gancho de IA está apenas comentado (não há cliente Gemini no código)
 - Admin configurado para `Brand` e `Car` com busca e listagem
 - i18n `pt-br`, timezone `America/Sao_Paulo`
 
@@ -28,11 +28,11 @@ Parte prática do curso [Django-Master PycodeBR](../../README.md).
 | Banco prod | PostgreSQL (bloco comentado em `settings.py`, via env) |
 | Imagens | Pillow 12.3.0 |
 | Env | python-dotenv 1.2.4 |
-| IA | google-genai 2.29.0 (modelo `gemini-3.8-flash`) |
 | Frontend | Templates Django + Bootstrap 5.3.8 CDN, CSS próprio `static/css/base.css` |
 | Auth | `django.contrib.auth` (sem custom user) |
+| Deploy | uWSGI (`uwsgi.ini`) |
 
-Dependências completas em [`requirements.txt`](requirements.txt).
+Dependências completas em [`requirements.txt`](requirements.txt). Observação: o arquivo lista pacotes não usados pelo projeto (DRF, drf-spectacular, django-countries, psycopg2-binary) e não inclui `google-genai`.
 
 ## Arquitetura e estrutura
 
@@ -42,7 +42,7 @@ carros/
 ├── core/                   # config do projeto
 │   ├── settings.py
 │   ├── urls.py             # admin/ + accounts/ + cars/ + media em DEBUG
-│   ├── model.py            # BaseModel abstrato
+│   ├── models.py           # BaseModel abstrato
 │   └── wsgi.py / asgi.py
 ├── apps/
 │   ├── cars/               # domínio principal
@@ -58,8 +58,6 @@ carros/
 │       ├── views.py        # FBVs login_view, logout_view, register_view
 │       ├── urls.py         # app_name='accounts'
 │       └── models.py / admin.py / tests.py (vazios, usa auth.User)
-├── ia_api/
-│   └── client.py           # generate(prompt) -> str
 ├── templates/
 │   ├── base.html           # navbar, busca, Bootstrap, blocks title/content
 │   ├── cars/list.html, detail.html, new.html, update.html, delete.html
@@ -72,6 +70,8 @@ carros/
 ├── media/cars/             # uploads (ignorado pelo git)
 ├── db.sqlite3
 ├── requirements.txt
+├── requirements_dev.txt
+├── uwsgi.ini / uwsgi_params
 ├── .env / .env-example
 └── README.md
 ```
@@ -80,7 +80,7 @@ Padrão: monolito server-rendered, sem API REST, sem AJAX. Templates centralizad
 
 ## Modelos
 
-Todos herdam `BaseModel` (`core/model.py`): `created_at` (auto_now_add), `updated_at` (auto_now), `is_active` (default True). `ordering = ['-created_at']`.
+Todos herdam `BaseModel` (`core/models.py`): `created_at` (auto_now_add), `updated_at` (auto_now), `is_active` (default True). `ordering = ['-created_at']`.
 
 | Modelo | Campos | Observações |
 |--------|--------|-------------|
@@ -114,7 +114,7 @@ Base (`core/urls.py`): sem rota `/` raiz. Acesso direto em `/cars/` e `/admin/`.
 
 Sem `password_reset` / `password_change`, sem trailing slash, sem controle por objeto (qualquer logado edita qualquer carro).
 
-## Views, forms, signals e IA
+## Views, forms e signals
 
 ### Views (`apps/cars/views.py`, `apps/accounts/views.py`)
 
@@ -135,13 +135,11 @@ Sem `password_reset` / `password_change`, sem trailing slash, sem controle por o
 - `update_inventory()`: `count()` + `Sum('price')` dos ativos → `CarInventory.objects.create(amount, value)`. O `Sum('id')` agregado como `total_amount` é calculado e ignorado.
 - `post_save` e `post_delete` de `Car` chamam `update_inventory()`.
 - `post_delete` remove o arquivo físico da imagem, se existir.
-- `pre_save`: se for update e a imagem trocou, remove o arquivo antigo; se `desc` vazia, define `'Descrição gerada automaticamente...'` (linha IA comentada abaixo).
+- `pre_save`: se for update e a imagem trocou, remove o arquivo antigo; se `desc` vazia, define `'Descrição gerada automaticamente...'`. Como a função retorna cedo quando `instance.pk` não existe, o placeholder não é aplicado na criação (`signals.py:33-56`).
 
-### IA (`ia_api/client.py`)
+### Gancho de IA
 
-`generate(prompt: str) -> str`: cria `genai.Client(api_key=settings.GEMINI_API_KEY)`, chama `models.generate_content(model='gemini-3.8-flash', contents='Crie uma descrição comercial ... até 500 caracteres ...', config={'max_output_tokens': 500, 'temperature': 0.4})`, faz `strip`, valida vazio, trunca em 500 chars, com retry 3x (`sleep 2**attempt`) apenas para `errors.ServerError`.
-
-Status: código pronto, mas não chamado (`signals.py:49` comentado). Se reativado, roda de forma síncrona no `pre_save` (adiciona latência ao save).
+`settings.GEMINI_API_KEY` é carregada do `.env`, mas **não é consumida por nenhum código**: o módulo `ia_api/` foi removido. Resta apenas um comentário em `signals.py:52-55` indicando onde uma geração de descrição poderia ser chamada. Se implementada, a chamada ocorreria de forma síncrona no `pre_save` (adicionando latência ao save), e `google-genai` precisaria ser adicionado às dependências.
 
 ## Templates e estáticos
 
@@ -162,7 +160,7 @@ Copie `.env-example` para `.env`. Variáveis (`core/settings.py`):
 | `SECRET_KEY` | `your-secret-key-here` | obrigatório, sem fallback (quebra se ausente) |
 | `DEBUG` | `0` | `bool(os.getenv('DEBUG','1'))` — atenção: `bool('0')` é `True` em Python, então `DEBUG=0` não desliga o debug. Correção sugerida: `os.getenv('DEBUG') == '1'` |
 | `ALLOWED_HOSTS` | `localhost,127.0.0.1` | `os.getenv(...).split(',')` — quebra se var ausente |
-| `GEMINI_API_KEY` | `your-key-api-here` | consumida por `ia_api/client.py` |
+| `GEMINI_API_KEY` | `your-key-api-here` | carregada em `settings.py`, mas sem consumidor no código (legado do módulo de IA removido) |
 | `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | ver `.env-example` | usados apenas se ativar o bloco Postgres |
 
 Email usa chave `MAILERS` com `console.EmailBackend`, que não é o padrão Django (`EMAIL_BACKEND`) e hoje é inócua.
@@ -181,7 +179,7 @@ pip install -r requirements.txt
 
 # 3. Env
 cp .env-example .env
-# edite SECRET_KEY, DEBUG, ALLOWED_HOSTS, GEMINI_API_KEY
+# edite SECRET_KEY, DEBUG e ALLOWED_HOSTS (GEMINI_API_KEY não é usada)
 
 # 4. Banco
 python manage.py migrate
@@ -228,7 +226,7 @@ python manage.py makemigrations
 python manage.py createsuperuser
 python manage.py runserver
 python manage.py shell
-python manage.py collectstatic  # STATIC_ROOT está comentado em settings.py
+python manage.py collectstatic  # STATIC_ROOT só é definido com DEBUG desligado; com o bool() atual, nunca é definido
 ```
 
 ## Limitações conhecidas
@@ -237,12 +235,13 @@ python manage.py collectstatic  # STATIC_ROOT está comentado em settings.py
 - `MAILERS` deveria ser `EMAIL_BACKEND`.
 - `related_name='brands'` confuso (retorna carros).
 - `CarInventory` append-only, sem admin e sem limpeza; `Sum('id')` morto.
-- `{% if car.image.url is not None %}` quebra sem imagem; usar `{% if car.image %}`.
+- `{% if car.image.url is not None %}` quebra sem imagem em `cars/list.html` e `cars/detail.html`; usar `{% if car.image %}`.
 - Logout via GET; `success_url='/cars/'` hardcoded em Create/Delete.
-- `includes/forms/input.html`, `static/js/`, `tests.py` vazios.
-- IA pronta mas desativada; se ativada, sem fila (bloqueia request).
+- `includes/forms/input.html`, `static/js/` e `apps/*/tests.py` vazios/não existentes.
+- `GEMINI_API_KEY` é legado: não há cliente de IA, e `requirements.txt` inclui pacotes de outros contextos (DRF, drf-spectacular, django-countries, psycopg2-binary) sem uso no carros.
+- Placeholder de descrição só roda em update (`pre_save` retorna cedo quando não há `pk`).
 
-Próximos passos sugeridos: corrigir `DEBUG`/`ALLOWED_HOSTS`, registrar `CarInventory` no admin com rotina de limpeza, trocar `related_name`, corrigir teste de imagem, exigir POST no logout, cobrir models/views/signals com testes, reativar Gemini de forma assíncrona.
+Próximos passos sugeridos: corrigir `DEBUG`/`ALLOWED_HOSTS`, registrar `CarInventory` no admin com rotina de limpeza, trocar `related_name`, corrigir o teste de imagem nos templates, exigir POST no logout, cobrir models/views/signals com testes, limpar dependências/env não usadas (ou implementar a geração de descrições de forma assíncrona).
 
 ## Licença
 
