@@ -1,27 +1,31 @@
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.shortcuts import redirect, render
+
 
 def login_view(request):
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        
+
         if user is not None:
             login(request, user)
             return redirect('cars:list_car')
-        
+
         form = AuthenticationForm(request, data=request.POST)
         form.add_error(None, 'Usuário ou senha inválidos.')
     else:
         form = AuthenticationForm()
-    return render(request, 'accounts/login.html', { 'form': form } )
+    return render(request, 'accounts/login.html', {'form': form})
+
 
 def logout_view(request):
     logout(request)
     return redirect('accounts:login_view')
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -31,4 +35,4 @@ def register_view(request):
             return redirect('accounts:login_view')
     else:
         form = UserCreationForm()
-    return render(request, 'accounts/register.html', { 'form': form} )
+    return render(request, 'accounts/register.html', {'form': form})
