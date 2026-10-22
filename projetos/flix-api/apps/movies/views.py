@@ -7,19 +7,31 @@ from apps.reviews.models import Review
 from core.permissions import CustomPermissions
 
 from .models import Movie
-from .serializers import MovieSerializer
+from .serializers import MovieModelSerializer, MovieSerializer
 
 
 class MovieListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated, CustomPermissions,)
     queryset = Movie.objects.filter(is_active=True)
-    serializer_class = MovieSerializer
+
+    def get_serializer_class(self):
+        return (
+            MovieSerializer
+            if self.request.method == 'GET'
+            else MovieModelSerializer
+        )
 
 
 class MovieRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated, CustomPermissions,)
     queryset = Movie.objects.filter(is_active=True)
-    serializer_class = MovieSerializer
+
+    def get_serializer_class(self):
+        return (
+            MovieSerializer
+            if self.request.method == 'GET'
+            else MovieModelSerializer
+        )
 
 
 class MovieStatsView(views.APIView):
