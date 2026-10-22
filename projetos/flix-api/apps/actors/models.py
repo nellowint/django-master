@@ -29,4 +29,3 @@ class Actor(BaseModel):
         ordering = ['name']
         verbose_name = 'Ator'
         verbose_name_plural = 'Atores'
-

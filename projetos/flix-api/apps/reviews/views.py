@@ -13,7 +13,8 @@ class ReviewListCreateAPIView(generics.ListCreateAPIView):
     queryset = Review.objects.filter(is_active=True)
     serializer_class = ReviewSerializer
 
-class ReviewListRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+
+class ReviewRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated, CustomPermissions, )
     queryset = Review.objects.filter(is_active=True)
     serializer_class = ReviewSerializer

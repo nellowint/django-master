@@ -5,13 +5,14 @@ from rest_framework import permissions
 class CustomPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        
+
         user_permission = self.__get_user_permissions(
-            method=request.method, 
+            method=request.method,
             meta_class=view.queryset.model._meta
         )
-        return request.user.has_perm(user_permission) if user_permission else False
-    
+        return (request.user.has_perm(user_permission)
+                if user_permission else False)
+
     def __get_user_permissions(self, method, meta_class):
         try:
             model_name = meta_class.model_name

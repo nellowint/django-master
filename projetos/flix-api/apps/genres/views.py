@@ -9,11 +9,12 @@ from .serializers import GenreSerializer
 
 
 class GenreListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticated, CustomPermissions, )
+    permission_classes = (IsAuthenticated, CustomPermissions,)
     queryset = Genre.objects.filter(is_active=True)
     serializer_class = GenreSerializer
 
+
 class GenreRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated, CustomPermissions, )
+    permission_classes = (IsAuthenticated, CustomPermissions,)
     queryset = Genre.objects.filter(is_active=True)
     serializer_class = GenreSerializer

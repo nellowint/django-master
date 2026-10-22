@@ -9,11 +9,12 @@ from .serializers import ActorSerializer
 
 
 class ActorListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticated, CustomPermissions, )
+    permission_classes = (IsAuthenticated, CustomPermissions,)
     queryset = Actor.objects.filter(is_active=True)
     serializer_class = ActorSerializer
 
+
 class ActorRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsAuthenticated, CustomPermissions, )
+    permission_classes = (IsAuthenticated, CustomPermissions,)
     queryset = Actor.objects.filter(is_active=True)
     serializer_class = ActorSerializer
