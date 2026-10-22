@@ -1,5 +1,6 @@
 
 from django.db import models
+
 from core.models import BaseModel
 
 
@@ -17,6 +18,7 @@ class Brand(BaseModel):
         ordering = ['-created_at']
         verbose_name = 'Marca'
         verbose_name_plural = 'Marcas'
+
 
 class Car(BaseModel):
     name = models.CharField(
@@ -87,7 +89,7 @@ class CarInventory(BaseModel):
 
     def __str__(self):
         return f'{self.amount} - {self.value}'
-    
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = 'Estoque'
