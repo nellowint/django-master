@@ -123,8 +123,6 @@ Para rodar um projeto Django, use o quickstart do README correspondente:
 - Carros: `cd projetos/carros`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
 - Flix API: `cd projetos/flix-api`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
 
-> **Atenção (flix-api):** `core/settings.py:118` usa `STATIC_ROOT = BASE_DIR + '/staticfiles'`; como `BASE_DIR` é `pathlib.Path`, isso levanta `TypeError` e qualquer comando `manage.py` falha. Troque por `BASE_DIR / 'staticfiles'` antes de rodar. O README do projeto detalha a limitação.
-
 Cada projeto já possui um `venv/` local no repositório de estudo; se recriar o ambiente, use os comandos das aulas 02 e 03.
 
 ## Créditos
