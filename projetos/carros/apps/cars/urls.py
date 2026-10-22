@@ -1,12 +1,8 @@
 
 from django.urls import path
-from .views import (
-    CreateViewCar, 
-    DeleteViewCar,
-    DetailViewCar,
-    ListViewCar, 
-    UpdateViewCar, 
-)
+
+from .views import (CreateViewCar, DeleteViewCar, DetailViewCar, ListViewCar,
+                    UpdateViewCar)
 
 app_name = 'cars'
 
