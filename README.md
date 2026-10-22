@@ -1,6 +1,6 @@
 # Django-Master — PycodeBR
 
-Formação prática em desenvolvimento web com Python e Django, abrangendo fundamentos de programação, orientação a objetos, ambientes virtuais, desenvolvimento de sistemas web, banco de dados, ORM, templates, formulários, autenticação, Class-Based Views, Signals, PostgreSQL, APIs e deploy de aplicações na AWS. O curso também trabalha a construção de projetos práticos utilizando ferramentas e práticas aplicadas ao desenvolvimento de sistemas reais.
+Formação prática em desenvolvimento web com Python e Django, abrangendo fundamentos de programação, orientação a objetos, ambientes virtuais, desenvolvimento de sistemas web, banco de dados, ORM, templates, formulários, autenticação, Class-Based Views, Signals, PostgreSQL, APIs REST com Django REST Framework (DRF) e JWT, e deploy de aplicações na AWS. O curso também trabalha a construção de projetos práticos utilizando ferramentas e práticas aplicadas ao desenvolvimento de sistemas reais.
 
 ## O que você vai aprender
 
@@ -9,8 +9,9 @@ Formação prática em desenvolvimento web com Python e Django, abrangendo funda
 - POO: classes e objetos, herança, polimorfismo (override e interface), `__init__`
 - Django MVT: projetos vs apps, ORM, migrations, templates, formulários (`ModelForm`), autenticação, CBV e FBV
 - Recursos Django: admin, static/media, signals (`pre_save`, `post_save`, `post_delete`), validações (`clean_*`)
-- Banco de dados: SQLite em desenvolvimento, PostgreSQL pronto para produção
-- Integração IA: cliente Google Gemini para geração de descrições (módulo `ia_api`)
+- Django REST: serializers, views genéricas (`ListCreateAPIView`, `RetrieveUpdateDestroyAPIView`), `APIView`, permissões e autenticação JWT (`SimpleJWT`)
+- Documentação de API: OpenAPI/Swagger/Redoc com `drf-spectacular`; países com `django-countries`
+- Banco de dados: SQLite em desenvolvimento, PostgreSQL pronto para produção no projeto `carros`
 - Boas práticas: organização por apps, `BaseModel` abstrato com auditoria, `.env-example`, i18n `pt-br`
 
 ## Estrutura do repositório
@@ -34,18 +35,30 @@ django-master/
 │   ├── aula14/main.py      # polimorfismo (override)
 │   └── aula15/main.py      # interface + __init__
 ├── projetos/
-│   └── carros/             # Projeto Django completo (ver README próprio)
-│       ├── core/           # settings, urls, BaseModel, wsgi/asgi
-│       ├── apps/cars/      # domínio Brand, Car, CarInventory
-│       ├── apps/accounts/  # login, logout, register
-│       ├── ia_api/         # cliente Gemini
-│       ├── templates/      # base + cars + accounts
-│       ├── static/         # css + img
+│   ├── carros/             # Projeto Django MVT (ver README próprio)
+│   │   ├── core/           # settings, urls, BaseModel, wsgi/asgi
+│   │   ├── apps/cars/      # domínio Brand, Car, CarInventory
+│   │   ├── apps/accounts/  # login, logout, register
+│   │   ├── templates/      # base + cars + accounts
+│   │   ├── static/         # css + img
+│   │   ├── uwsgi.ini       # deploy
+│   │   ├── requirements.txt
+│   │   └── .env-example
+│   └── flix-api/           # Projeto Django REST (ver README próprio)
+│       ├── core/           # settings, urls, BaseModel, permissions
+│       ├── apps/actors/    # CRUD + importação CSV de atores
+│       ├── apps/genres/    # CRUD de gêneros
+│       ├── apps/movies/    # CRUD + estatísticas
+│       ├── apps/reviews/   # CRUD de avaliações
+│       ├── apps/auths/     # endpoints JWT (token/refresh/verify)
+│       ├── static/actors.csv
 │       ├── requirements.txt
 │       └── .env-example
 ├── LICENSE
 └── README.md
 ```
+
+Os dois projetos Django são independentes: cada um tem seu próprio `venv`, `requirements.txt`, `.env-example` e banco SQLite local. Não há tooling nem código compartilhado na raiz.
 
 ## Grade das aulas
 
@@ -69,13 +82,19 @@ django-master/
 
 Progressão: setup (01-03) → base (04-05) → controle (06-07) → coleções (08-10) → config (11) → POO (12-15).
 
-## Projeto prático
+## Projetos práticos
 
-### Carros — CRUD Concessionária Django + IA
+### Carros — CRUD de concessionária (Django MVT)
 
-Monolito Django MVT com 2 apps (`cars`, `accounts`), CRUD de carros com upload de imagem, busca, autenticação, signals de inventário e limpeza de mídia, e cliente Gemini pronto para gerar descrições.
+Monolito Django MVT com 2 apps (`cars`, `accounts`), CRUD de carros com upload de imagem, busca, autenticação, signals de inventário e limpeza de mídia. Não há módulo de IA no código: `GEMINI_API_KEY` ainda é lida em `settings.py` e resta apenas um comentário de gancho em `signals.py`.
 
 Documentação completa, setup e rotas em [`projetos/carros/README.md`](projetos/carros/README.md).
+
+### Flix API — catálogo de filmes (Django REST)
+
+API REST com DRF, autenticação JWT (`SimpleJWT`), permissões por modelo, serializers aninhados para leitura, endpoint de estatísticas, documentação OpenAPI/Swagger (`drf-spectacular`) e importação de atores via CSV. Todos os recursos ficam sob `/api/v1/`.
+
+Documentação completa, rotas e payloads em [`projetos/flix-api/README.md`](projetos/flix-api/README.md).
 
 ## Como estudar e executar
 
@@ -99,7 +118,14 @@ pip freeze > requirements.txt
 deactivate
 ```
 
-Para rodar o projeto Django, siga o quickstart do [`projetos/carros/README.md`](projetos/carros/README.md) (copiar `.env-example` para `.env`, `migrate`, `createsuperuser`, `runserver`).
+Para rodar um projeto Django, use o quickstart do README correspondente:
+
+- Carros: `cd projetos/carros`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
+- Flix API: `cd projetos/flix-api`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
+
+> **Atenção (flix-api):** `core/settings.py:118` usa `STATIC_ROOT = BASE_DIR + '/staticfiles'`; como `BASE_DIR` é `pathlib.Path`, isso levanta `TypeError` e qualquer comando `manage.py` falha. Troque por `BASE_DIR / 'staticfiles'` antes de rodar. O README do projeto detalha a limitação.
+
+Cada projeto já possui um `venv/` local no repositório de estudo; se recriar o ambiente, use os comandos das aulas 02 e 03.
 
 ## Créditos
 
