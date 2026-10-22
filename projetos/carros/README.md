@@ -57,7 +57,7 @@ carros/
 │   └── accounts/           # autenticação
 │       ├── views.py        # FBVs login_view, logout_view, register_view
 │       ├── urls.py         # app_name='accounts'
-│       └── models.py / admin.py / tests.py (vazios, usa auth.User)
+│       └── models.py / admin.py (vazios, usa auth.User)
 ├── templates/
 │   ├── base.html           # navbar, busca, Bootstrap, blocks title/content
 │   ├── cars/list.html, detail.html, new.html, update.html, delete.html
@@ -237,7 +237,7 @@ python manage.py collectstatic  # STATIC_ROOT só é definido com DEBUG desligad
 - `CarInventory` append-only, sem admin e sem limpeza; `Sum('id')` morto.
 - `{% if car.image.url is not None %}` quebra sem imagem em `cars/list.html` e `cars/detail.html`; usar `{% if car.image %}`.
 - Logout via GET; `success_url='/cars/'` hardcoded em Create/Delete.
-- `includes/forms/input.html`, `static/js/` e `apps/*/tests.py` vazios/não existentes.
+- `includes/forms/input.html` e `static/js/` vazios; não há testes automatizados.
 - `GEMINI_API_KEY` é legado: não há cliente de IA, e `requirements.txt` inclui pacotes de outros contextos (DRF, drf-spectacular, django-countries, psycopg2-binary) sem uso no carros.
 - Placeholder de descrição só roda em update (`pre_save` retorna cedo quando não há `pk`).
 
