@@ -232,9 +232,9 @@ Copie `.env-example` para `.env`. Variáveis usadas por `core/settings.py`:
 
 Não há variáveis de banco: o SQLite é fixo em `BASE_DIR / 'db.sqlite3'`. A chave `MAILERS` existe com `console.EmailBackend`, mas o padrão Django é `EMAIL_BACKEND`, então ela é inócua.
 
-## Quickstart
+Arquivos estáticos usam `STATIC_URL = 'static/'`, `STATIC_ROOT = BASE_DIR / 'staticfiles'` (destino do `collectstatic`) e `STATICFILES_DIRS = [BASE_DIR / 'static']` (origem, onde fica `actors.csv`).
 
-> **Limitação atual (bloqueante):** `core/settings.py:118` define `STATIC_ROOT = BASE_DIR  + '/staticfiles'`. Como `BASE_DIR` é `pathlib.Path`, o import de settings levanta `TypeError: unsupported operand type(s) for +: 'PosixPath' and 'str'`, e **qualquer** comando `manage.py` falha. Troque a linha por `STATIC_ROOT = BASE_DIR / 'staticfiles'` para conseguir rodar o projeto.
+## Quickstart
 
 ```bash
 cd projetos/flix-api
@@ -260,7 +260,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Depois da correção do `STATIC_ROOT`, acesse:
+Acesse:
 
 - Admin: `http://127.0.0.1:8000/admin/`
 - Swagger: `http://127.0.0.1:8000/api/v1/schema/swagger-ui/`
@@ -285,7 +285,6 @@ No Swagger, o esquema de segurança é declarado como `apiKey` no header `Author
 
 ## Limitações conhecidas
 
-- `STATIC_ROOT` com `Path + str` quebra todos os comandos `manage.py` (`core/settings.py:118`).
 - `DEBUG` via `bool()` sempre `True`; `ALLOWED_HOSTS` frágil sem `.env`; `SECRET_KEY` sem fallback.
 - `MAILERS` deveria ser `EMAIL_BACKEND`.
 - `ActorSerializer` e `GenreSerializer` expõem apenas `id`/`name`: `birthday`, `nationality` e `is_active` não são editáveis pela API.
@@ -298,7 +297,7 @@ No Swagger, o esquema de segurança é declarado como `apiKey` no header `Author
 - Sem testes automatizados.
 - `flake8` acusa `E501` pré-existente em `apps/reviews/views.py:23` (linha com 80 colunas); `isort` passa.
 
-Próximos passos sugeridos: corrigir `STATIC_ROOT`/`DEBUG`, ampliar os serializers de ator/gênero, normalizar o tipo de `rate`, adicionar paginação/filtros, proteger a exclusão com tratamento de `ProtectedError`, usar `select_related`/`prefetch_related`, tornar a importação idempotente e cobrir views/permissões com testes.
+Próximos passos sugeridos: corrigir `DEBUG`/`ALLOWED_HOSTS`, ampliar os serializers de ator/gênero, normalizar o tipo de `rate`, adicionar paginação/filtros, proteger a exclusão com tratamento de `ProtectedError`, usar `select_related`/`prefetch_related`, tornar a importação idempotente e cobrir views/permissões com testes.
 
 ## Licença
 
