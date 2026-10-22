@@ -1,16 +1,13 @@
 
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView, 
-    DeleteView,
-    DetailView,
-    ListView, 
-    UpdateView, 
-)
-from .models import Car
+from django.utils.decorators import method_decorator
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
+
 from .forms import CarForm
+from .models import Car
+
 
 class ListViewCar(ListView):
     model = Car
@@ -24,27 +21,37 @@ class ListViewCar(ListView):
             cars = cars.filter(name__icontains=search)
         return cars
 
+
 class DetailViewCar(DetailView):
     model = Car
     template_name = 'cars/detail.html'
 
-@method_decorator(login_required(login_url='accounts:login_view'), name='dispatch')
+
+@method_decorator(login_required(
+    login_url='accounts:login_view'), name='dispatch'
+)
 class CreateViewCar(CreateView):
     model = Car
     form_class = CarForm
     template_name = 'cars/new.html'
     success_url = '/cars/'
 
-@method_decorator(login_required(login_url='accounts:login_view'), name='dispatch')
+
+@method_decorator(login_required(
+    login_url='accounts:login_view'), name='dispatch'
+)
 class UpdateViewCar(UpdateView):
     model = Car
     form_class = CarForm
     template_name = 'cars/update.html'
 
     def get_success_url(self):
-        return reverse_lazy('cars:detail_car', kwargs={ 'pk': self.object.pk })
+        return reverse_lazy('cars:detail_car', kwargs={'pk': self.object.pk})
 
-@method_decorator(login_required(login_url='accounts:login_view'), name='dispatch')
+
+@method_decorator(login_required(
+    login_url='accounts:login_view'), name='dispatch'
+)
 class DeleteViewCar(DeleteView):
     model = Car
     template_name = 'cars/delete.html'
