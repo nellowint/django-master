@@ -72,7 +72,7 @@ carros/
 ├── requirements.txt
 ├── requirements_dev.txt
 ├── uwsgi.ini / uwsgi_params
-├── .env / .env-example
+├── .env / .env.example
 └── README.md
 ```
 
@@ -153,7 +153,7 @@ Sem `password_reset` / `password_change`, sem trailing slash, sem controle por o
 
 ## Configuração (.env)
 
-Copie `.env-example` para `.env`. Variáveis (`core/settings.py`):
+Copie `.env.example` para `.env`. Variáveis (`core/settings.py`):
 
 | Var | Exemplo | Uso |
 |-----|---------|-----|
@@ -161,7 +161,7 @@ Copie `.env-example` para `.env`. Variáveis (`core/settings.py`):
 | `DEBUG` | `0` | `bool(os.getenv('DEBUG','1'))` — atenção: `bool('0')` é `True` em Python, então `DEBUG=0` não desliga o debug. Correção sugerida: `os.getenv('DEBUG') == '1'` |
 | `ALLOWED_HOSTS` | `localhost,127.0.0.1` | `os.getenv(...).split(',')` — quebra se var ausente |
 | `GEMINI_API_KEY` | `your-key-api-here` | carregada em `settings.py`, mas sem consumidor no código (legado do módulo de IA removido) |
-| `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | ver `.env-example` | usados apenas se ativar o bloco Postgres |
+| `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` | ver `.env.example` | usados apenas se ativar o bloco Postgres |
 
 Email usa chave `MAILERS` com `console.EmailBackend`, que não é o padrão Django (`EMAIL_BACKEND`) e hoje é inócua.
 
@@ -178,7 +178,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # 3. Env
-cp .env-example .env
+cp .env.example .env
 # edite SECRET_KEY, DEBUG e ALLOWED_HOSTS (GEMINI_API_KEY não é usada)
 
 # 4. Banco
