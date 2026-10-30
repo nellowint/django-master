@@ -16,6 +16,7 @@ Projeto em construção. O fluxo de **login** está implementado; depois da aute
 - Helper de logout que limpa o `session_state` (com bug, ver limitações)
 - `GenreRepository` com `list_genres()` e `create_genre()` usando `Authorization: Bearer ...`
 - `BASE_URL` carregada do `.env` via `python-dotenv`
+- `.env.example` com a variável `BASE_URL`
 - Lint com `flake8`/`isort`
 
 ## Stack
@@ -49,19 +50,20 @@ flix-app/
 ├── movies/                 # apenas __init__.py
 ├── reviews/                # apenas __init__.py
 ├── actors/                 # apenas __init__.py
-├── .env                    # BASE_URL (ignorado pelo git)
+├── .env.example            # modelo de configuração (BASE_URL)
+├── .env                    # configuração local (ignorado pelo git)
 ├── .flake8                 # exclui venv
 ├── requirements.txt
 └── requirements_dev.txt
 ```
 
-Não há `pyproject.toml`, testes automatizados nem `.env-example`.
+Não há `pyproject.toml` nem testes automatizados; o `.env.example` vem no repositório.
 
 ## Integração com a Flix API
 
 ### Configuração
 
-Crie `projetos/flix-app/.env` com a URL base da API, **sem barra no final**:
+Copie `projetos/flix-app/.env.example` para `.env` e ajuste a URL base da API, **sem barra no final**:
 
 ```dotenv
 BASE_URL='http://127.0.0.1:8000/api/v1'
@@ -95,9 +97,8 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Configuração
-cat > .env <<'EOF'
-BASE_URL='http://127.0.0.1:8000/api/v1'
-EOF
+cp .env.example .env
+# edite BASE_URL para a URL da API
 
 # Rodar a interface
 streamlit run app.py
@@ -117,10 +118,9 @@ Para usar a API publicada, basta trocar o `BASE_URL` no `.env` (o ambiente local
 - `Auth.get_token()` não trata timeout/erro de conexão e devolve `status_code` como `set`.
 - Só o `access` é guardado; não há refresh automático nem expiração de sessão.
 - O login não valida campos vazios e o `spinner` não é usado como context manager.
-- Não há `.env-example`; o `.env` precisa ser criado manualmente.
 - Sem testes automatizados.
 
-Próximos passos sugeridos: corrigir os bugs de sessão/headers, implementar as páginas e services de gêneros, filmes, atores e avaliações, tratar refresh/expiração do JWT, adicionar `.env-example`, timeouts e testes.
+Próximos passos sugeridos: corrigir os bugs de sessão/headers, implementar as páginas e services de gêneros, filmes, atores e avaliações, tratar refresh/expiração do JWT, adicionar timeouts e testes.
 
 ## Licença
 
