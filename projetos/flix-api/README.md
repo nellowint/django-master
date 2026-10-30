@@ -2,6 +2,8 @@
 
 API REST para catálogo de filmes, com atores, gêneros e avaliações. Usa Django REST Framework (DRF), autenticação JWT com SimpleJWT, permissões por modelo do Django, serializers aninhados para leitura, estatísticas agregadas e documentação OpenAPI (Swagger/Redoc). Todos os recursos ficam sob `/api/v1/`.
 
+É consumida pelo [Flix App](../flix-app/README.md), cliente Streamlit que se autentica via JWT e chama os endpoints com `requests`.
+
 Parte prática do curso [Django-Master PycodeBR](../../README.md).
 
 ## Features
