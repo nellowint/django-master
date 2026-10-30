@@ -13,7 +13,7 @@ Formação prática em desenvolvimento web com Python e Django, abrangendo funda
 - Front-end de API: Streamlit, `requests`, sessão (`st.session_state`) e JWT
 - Documentação de API: OpenAPI/Swagger/Redoc com `drf-spectacular`; países com `django-countries`
 - Banco de dados: SQLite em desenvolvimento, PostgreSQL pronto para produção no projeto `carros`
-- Boas práticas: organização por apps, `BaseModel` abstrato com auditoria, `.env-example`, i18n `pt-br`
+- Boas práticas: organização por apps, `BaseModel` abstrato com auditoria, `.env.example`, i18n `pt-br`
 
 ## Estrutura do repositório
 
@@ -44,7 +44,7 @@ django-master/
 │   │   ├── static/         # css + img
 │   │   ├── uwsgi.ini       # deploy
 │   │   ├── requirements.txt
-│   │   └── .env-example
+│   │   └── .env.example
 │   ├── flix-api/           # Projeto Django REST (ver README próprio)
 │   │   ├── core/           # settings, urls, BaseModel, permissions
 │   │   ├── apps/actors/    # CRUD + importação CSV de atores
@@ -54,7 +54,7 @@ django-master/
 │   │   ├── apps/auths/     # endpoints JWT (token/refresh/verify)
 │   │   ├── static/actors.csv
 │   │   ├── requirements.txt
-│   │   └── .env-example
+│   │   └── .env.example
 │   └── flix-app/           # Cliente Streamlit da Flix API (ver README próprio)
 │       ├── app.py          # entrypoint Streamlit
 │       ├── api/            # BASE_URL + Auth (JWT)
@@ -64,12 +64,13 @@ django-master/
 │       ├── reviews/        # ainda vazio
 │       ├── actors/         # ainda vazio
 │       ├── requirements.txt
-│       └── .env            # BASE_URL (ignorado pelo git)
+│       ├── .env.example    # BASE_URL
+│       └── .env            # configuração local (ignorada pelo git)
 ├── LICENSE
 └── README.md
 ```
 
-Os dois projetos Django são independentes e cada um tem seu próprio `venv`, `requirements.txt`, `.env-example` e SQLite local. O `flix-app` é um cliente Streamlit separado, com `venv`/`requirements.txt` próprios, que consome a Flix API via HTTP. Não há tooling nem código compartilhado na raiz.
+Os dois projetos Django são independentes e cada um tem seu próprio `venv`, `requirements.txt`, `.env.example` e SQLite local. O `flix-app` é um cliente Streamlit separado, com `venv`, `requirements.txt` e `.env.example` próprios, que consome a Flix API via HTTP. Não há tooling nem código compartilhado na raiz.
 
 ## Grade das aulas
 
@@ -137,9 +138,9 @@ deactivate
 
 Para rodar os projetos, use o quickstart do README correspondente:
 
-- Carros: `cd projetos/carros`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
-- Flix API: `cd projetos/flix-api`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
-- Flix App: com a API rodando, criar `projetos/flix-app/.env` com `BASE_URL`, instalar `requirements.txt` e executar `streamlit run app.py`.
+- Carros: `cd projetos/carros`, copiar `.env.example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
+- Flix API: `cd projetos/flix-api`, copiar `.env.example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
+- Flix App: com a API rodando, copiar `.env.example` para `.env`, instalar `requirements.txt` e executar `streamlit run app.py`.
 
 Cada projeto já possui um `venv/` local no repositório de estudo; se recriar o ambiente, use os comandos das aulas 02 e 03.
 
