@@ -79,7 +79,7 @@ flix-api/
 ├── static/actors.csv       # massa de exemplo (atores)
 ├── requirements.txt
 ├── requirements_dev.txt
-├── .env-example
+├── .env.example
 └── README.md
 ```
 
@@ -224,7 +224,7 @@ O comando `import_actors` lê um CSV com cabeçalho `name,birthday,nationality`:
 
 ## Configuração (.env)
 
-Copie `.env-example` para `.env`. Variáveis usadas por `core/settings.py`:
+Copie `.env.example` para `.env`. Variáveis usadas por `core/settings.py`:
 
 | Var | Exemplo | Uso |
 |-----|---------|-----|
@@ -249,7 +249,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # 3. Env
-cp .env-example .env
+cp .env.example .env
 # edite SECRET_KEY, DEBUG e ALLOWED_HOSTS
 
 # 4. Banco
