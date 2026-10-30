@@ -1,6 +1,6 @@
 # Django-Master — PycodeBR
 
-Formação prática em desenvolvimento web com Python e Django, abrangendo fundamentos de programação, orientação a objetos, ambientes virtuais, desenvolvimento de sistemas web, banco de dados, ORM, templates, formulários, autenticação, Class-Based Views, Signals, PostgreSQL, APIs REST com Django REST Framework (DRF) e JWT, e deploy de aplicações na AWS. O curso também trabalha a construção de projetos práticos utilizando ferramentas e práticas aplicadas ao desenvolvimento de sistemas reais.
+Formação prática em desenvolvimento web com Python e Django, abrangendo fundamentos de programação, orientação a objetos, ambientes virtuais, desenvolvimento de sistemas web, banco de dados, ORM, templates, formulários, autenticação, Class-Based Views, Signals, PostgreSQL, APIs REST com Django REST Framework (DRF) e JWT, front-end Streamlit consumindo a API, e deploy de aplicações na AWS. O curso também trabalha a construção de projetos práticos utilizando ferramentas e práticas aplicadas ao desenvolvimento de sistemas reais.
 
 ## O que você vai aprender
 
@@ -10,6 +10,7 @@ Formação prática em desenvolvimento web com Python e Django, abrangendo funda
 - Django MVT: projetos vs apps, ORM, migrations, templates, formulários (`ModelForm`), autenticação, CBV e FBV
 - Recursos Django: admin, static/media, signals (`pre_save`, `post_save`, `post_delete`), validações (`clean_*`)
 - Django REST: serializers, views genéricas (`ListCreateAPIView`, `RetrieveUpdateDestroyAPIView`), `APIView`, permissões e autenticação JWT (`SimpleJWT`)
+- Front-end de API: Streamlit, `requests`, sessão (`st.session_state`) e JWT
 - Documentação de API: OpenAPI/Swagger/Redoc com `drf-spectacular`; países com `django-countries`
 - Banco de dados: SQLite em desenvolvimento, PostgreSQL pronto para produção no projeto `carros`
 - Boas práticas: organização por apps, `BaseModel` abstrato com auditoria, `.env-example`, i18n `pt-br`
@@ -44,21 +45,31 @@ django-master/
 │   │   ├── uwsgi.ini       # deploy
 │   │   ├── requirements.txt
 │   │   └── .env-example
-│   └── flix-api/           # Projeto Django REST (ver README próprio)
-│       ├── core/           # settings, urls, BaseModel, permissions
-│       ├── apps/actors/    # CRUD + importação CSV de atores
-│       ├── apps/genres/    # CRUD de gêneros
-│       ├── apps/movies/    # CRUD + estatísticas
-│       ├── apps/reviews/   # CRUD de avaliações
-│       ├── apps/auths/     # endpoints JWT (token/refresh/verify)
-│       ├── static/actors.csv
+│   ├── flix-api/           # Projeto Django REST (ver README próprio)
+│   │   ├── core/           # settings, urls, BaseModel, permissions
+│   │   ├── apps/actors/    # CRUD + importação CSV de atores
+│   │   ├── apps/genres/    # CRUD de gêneros
+│   │   ├── apps/movies/    # CRUD + estatísticas
+│   │   ├── apps/reviews/   # CRUD de avaliações
+│   │   ├── apps/auths/     # endpoints JWT (token/refresh/verify)
+│   │   ├── static/actors.csv
+│   │   ├── requirements.txt
+│   │   └── .env-example
+│   └── flix-app/           # Cliente Streamlit da Flix API (ver README próprio)
+│       ├── app.py          # entrypoint Streamlit
+│       ├── api/            # BASE_URL + Auth (JWT)
+│       ├── auth/           # tela e service de login/logout
+│       ├── genres/         # repositório parcial de gêneros
+│       ├── movies/         # ainda vazio
+│       ├── reviews/        # ainda vazio
+│       ├── actors/         # ainda vazio
 │       ├── requirements.txt
-│       └── .env-example
+│       └── .env            # BASE_URL (ignorado pelo git)
 ├── LICENSE
 └── README.md
 ```
 
-Os dois projetos Django são independentes: cada um tem seu próprio `venv`, `requirements.txt`, `.env-example` e banco SQLite local. Não há tooling nem código compartilhado na raiz.
+Os dois projetos Django são independentes e cada um tem seu próprio `venv`, `requirements.txt`, `.env-example` e SQLite local. O `flix-app` é um cliente Streamlit separado, com `venv`/`requirements.txt` próprios, que consome a Flix API via HTTP. Não há tooling nem código compartilhado na raiz.
 
 ## Grade das aulas
 
@@ -92,9 +103,15 @@ Documentação completa, setup e rotas em [`projetos/carros/README.md`](projetos
 
 ### Flix API — catálogo de filmes (Django REST)
 
-API REST com DRF, autenticação JWT (`SimpleJWT`), permissões por modelo, serializers aninhados para leitura, endpoint de estatísticas, documentação OpenAPI/Swagger (`drf-spectacular`) e importação de atores via CSV. Todos os recursos ficam sob `/api/v1/`.
+API REST com DRF, autenticação JWT (`SimpleJWT`), permissões por modelo, serializers aninhados para leitura, endpoint de estatísticas, documentação OpenAPI/Swagger (`drf-spectacular`) e importação de atores via CSV. Todos os recursos ficam sob `/api/v1/` e são consumidos pelo Flix App.
 
 Documentação completa, rotas e payloads em [`projetos/flix-api/README.md`](projetos/flix-api/README.md).
+
+### Flix App — cliente Streamlit (em construção)
+
+Interface Streamlit que consome a Flix API com `requests`: login via JWT, token em `st.session_state` e repositório inicial de gêneros. O login funciona, mas as telas de gêneros, filmes, atores e avaliações ainda não foram implementadas (o `app.py` fica em branco após autenticar).
+
+Documentação, configuração de `BASE_URL` e limitações em [`projetos/flix-app/README.md`](projetos/flix-app/README.md).
 
 ## Como estudar e executar
 
@@ -118,10 +135,11 @@ pip freeze > requirements.txt
 deactivate
 ```
 
-Para rodar um projeto Django, use o quickstart do README correspondente:
+Para rodar os projetos, use o quickstart do README correspondente:
 
 - Carros: `cd projetos/carros`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
 - Flix API: `cd projetos/flix-api`, copiar `.env-example` para `.env`, instalar `requirements.txt`, rodar `migrate`, `createsuperuser` e `runserver`.
+- Flix App: com a API rodando, criar `projetos/flix-app/.env` com `BASE_URL`, instalar `requirements.txt` e executar `streamlit run app.py`.
 
 Cada projeto já possui um `venv/` local no repositório de estudo; se recriar o ambiente, use os comandos das aulas 02 e 03.
 
