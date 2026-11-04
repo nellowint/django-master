@@ -1,6 +1,4 @@
 
-from urllib import response
-
 import requests
 import streamlit as st
 
@@ -13,7 +11,7 @@ class GenreRepository:
     def __init__(self):
         self.__genres_url = f'{BASE_URL}/genres/'
         self.__headers = {
-            'Authorization': f'Bearer {st.session_state}'
+            'Authorization': f'Bearer {st.session_state.token}'
         }
 
     def list_genres(self):
@@ -28,7 +26,6 @@ class GenreRepository:
             logout()
             return None
         raise Exception(f'Erro de API. Code: {response.status_code}')
-
 
     def create_genre(self, genre):
         response = requests.post(
