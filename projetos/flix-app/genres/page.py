@@ -6,17 +6,19 @@ from st_aggrid import AgGrid
 from genres.service import GenreService
 
 
-def render_genres():
-    st.write('Gêneros')
+def render_page():
+    st.write('Lista de Gêneros')
     genre_service = GenreService()
     genres = genre_service.list_genres()
 
     name = st.text_input(
         label='Nome',
-        placeholder='Nome do Gênero'
+        placeholder='Nome do Gênero',
+        key='genre_name'
     )
 
     if st.button('Salvar'):
+        st.session_state.genre_name = ""
         new_genre = genre_service.create_genre(name)
         if new_genre:
             st.success('Cadastro realizado com sucesso')
@@ -35,4 +37,4 @@ def render_genres():
         st.warning('Não há gêneros cadastrados')
 
 
-render_genres()
+render_page()
