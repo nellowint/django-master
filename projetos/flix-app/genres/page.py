@@ -7,18 +7,16 @@ from genres.service import GenreService
 
 
 def render_page():
-    st.write('Lista de Gêneros')
+    st.title('Lista de Gêneros')
     genre_service = GenreService()
-    genres = genre_service.list_genres()
+    genres = genre_service.get_genres()
 
     name = st.text_input(
         label='Nome',
-        placeholder='Nome do Gênero',
-        key='genre_name'
+        placeholder='Nome do Gênero'
     )
 
     if st.button('Salvar'):
-        st.session_state.genre_name = ""
         new_genre = genre_service.create_genre(name)
         if new_genre:
             st.success('Cadastro realizado com sucesso')
