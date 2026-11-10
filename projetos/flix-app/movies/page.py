@@ -12,9 +12,9 @@ from movies.service import MovieService
 
 
 def render_page():
-    st.write('Lista de Filmes')
+    st.title('Lista de Filmes')
     movie_service = MovieService()
-    movies = movie_service.list_movies()
+    movies = movie_service.get_movies()
 
     title = st.text_input(
         label='Título',
@@ -35,8 +35,8 @@ def render_page():
     )
 
     genre_service = GenreService()
-    genres = genre_service.list_genres()
-    genre_names = { genre['name']: genre['id'] for genre in genres }
+    genres = genre_service.get_genres()
+    genre_names = {genre['name']: genre['id'] for genre in genres}
     genre_selectbox = st.selectbox(
         label='Gênero',
         placeholder='Selecione um gênero',
@@ -44,14 +44,14 @@ def render_page():
     )
 
     actor_service = ActorService()
-    actors = actor_service.list_actors()
-    actor_names = { actor['name']: actor['id'] for actor in actors }
+    actors = actor_service.get_actors()
+    actor_names = {actor['name']: actor['id'] for actor in actors}
     actor_selectbox = st.multiselect(
         label='Atores/Atrizes',
         placeholder='Selecione os atores/atrizes',
         options=list(actor_names.keys())
     )
-    actors_ids = [ actor_names[name] for name in actor_selectbox ]
+    actors_ids = [actor_names[name] for name in actor_selectbox]
 
     if st.button('Salvar'):
         new_movie = movie_service.create_movie(
@@ -70,11 +70,16 @@ def render_page():
 
     if movies:
         dataframe = pd.json_normalize(movies)
-        dataframe = dataframe.drop(columns=['actors', 'genre.id'])
+        dataframe = dataframe.drop(
+            columns=[
+                'genre.id',
+                'actors'
+            ]
+        )
         AgGrid(
             data=pd.DataFrame(dataframe),
             reload_data=True,
-            key='movies_grid' 
+            key='movies_grid'
         )
     else:
         st.warning('Não há filmes cadastrados')
