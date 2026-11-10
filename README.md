@@ -56,13 +56,15 @@ django-master/
 │   │   ├── requirements.txt
 │   │   └── .env.example
 │   └── flix-app/           # Cliente Streamlit da Flix API (ver README próprio)
-│       ├── app.py          # entrypoint Streamlit
+│       ├── app.py          # entrypoint + navegação autenticada
+│       ├── config.toml     # configuração do Streamlit
 │       ├── api/            # BASE_URL + Auth (JWT)
 │       ├── auth/           # tela e service de login/logout
-│       ├── genres/         # repositório parcial de gêneros
-│       ├── movies/         # ainda vazio
-│       ├── reviews/        # ainda vazio
-│       ├── actors/         # ainda vazio
+│       ├── home/           # estatísticas de filmes
+│       ├── genres/         # listagem e cadastro de gêneros
+│       ├── movies/         # listagem, cadastro e estatísticas
+│       ├── reviews/        # listagem e cadastro de avaliações
+│       ├── actors/         # listagem, cadastro e lista de países
 │       ├── requirements.txt
 │       ├── .env.example    # BASE_URL
 │       └── .env            # configuração local (ignorada pelo git)
@@ -108,9 +110,9 @@ API REST com DRF, autenticação JWT (`SimpleJWT`), permissões por modelo, seri
 
 Documentação completa, rotas e payloads em [`projetos/flix-api/README.md`](projetos/flix-api/README.md).
 
-### Flix App — cliente Streamlit (em construção)
+### Flix App — cliente Streamlit
 
-Interface Streamlit que consome a Flix API com `requests`: login via JWT, token em `st.session_state` e repositório inicial de gêneros. O login funciona, mas as telas de gêneros, filmes, atores e avaliações ainda não foram implementadas (o `app.py` fica em branco após autenticar).
+Interface Streamlit que consome a Flix API com `requests`: login via JWT e navegação com páginas de início (estatísticas), gêneros, atores, filmes e avaliações, com listagem e cadastro. O token e as listagens ficam em `st.session_state`, e o cadastro de atores usa uma lista de países ISO 3166-1 alpha-2 compatível com o `CountryField`.
 
 Documentação, configuração de `BASE_URL` e limitações em [`projetos/flix-app/README.md`](projetos/flix-app/README.md).
 
