@@ -14,7 +14,7 @@ class GenreRepository:
             'Authorization': f'Bearer {st.session_state.token}'
         }
 
-    def list_genres(self):
+    def get_genres(self):
         response = requests.get(
             url=self.__genres_url,
             headers=self.__headers
