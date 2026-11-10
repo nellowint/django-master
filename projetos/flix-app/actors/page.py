@@ -4,13 +4,14 @@ import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid
 
+from actors.country import COUNTRIES
 from actors.service import ActorService
 
 
 def render_page():
-    st.write('Lista de Atores/Atrizes')
+    st.title('Lista de Atores/Atrizes')
     actor_service = ActorService()
-    actors = actor_service.list_actors()
+    actors = actor_service.get_actors()
 
     name = st.text_input(
         label='Nome',
@@ -23,20 +24,20 @@ def render_page():
         max_value=datetime.today(),
         format='DD/MM/YYYY'
     )
-    nationalities = ['BRA', 'USA', 'GER', 'FRA']
 
     nationality = st.selectbox(
         label='Nacionalidade',
-        options=nationalities,
+        options=list(COUNTRIES.values()),
         index=None,
         placeholder='Selecione uma nacionalidade'
     )
+    nationality_names = {name: code for code, name in COUNTRIES.items()}
 
     if st.button('Salvar'):
         new_actor = actor_service.create_actor(
             name=name,
             birthday=birthday,
-            nationality=nationality
+            nationality=nationality_names[nationality]
         )
         if new_actor:
             st.success('Cadastro realizado com sucesso')
