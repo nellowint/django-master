@@ -9,12 +9,12 @@ from auth.service import logout
 class ActorRepository:
 
     def __init__(self):
-        self.__actors_url = f'{BASE_URL}/actors'
+        self.__actors_url = f'{BASE_URL}/actors/'
         self.__headers = {
             'Authorization': f'Bearer {st.session_state.token}'
         }
 
-    def list_actors(self):
+    def get_actors(self):
         response = requests.get(
             url=self.__actors_url,
             headers=self.__headers,
