@@ -1,4 +1,6 @@
 
+import streamlit as st
+
 from movies.repository import MovieRepository
 
 
@@ -7,8 +9,10 @@ class MovieService:
     def __init__(self):
         self.movie_repository = MovieRepository()
 
-    def list_movies(self):
-        return self.movie_repository.list_movies()
+    def get_movies(self):
+        if 'movies' not in st.session_state:
+            st.session_state.movies = self.movie_repository.get_movies()
+        return st.session_state.movies
 
     def create_movie(self, title, sinopse, genre, release_date, actors):
         movie = dict(
@@ -18,4 +22,11 @@ class MovieService:
             release_date=release_date,
             actors=actors
         )
-        return self.movie_repository.create_movie(movie)
+        new_movie = self.movie_repository.create_movie(movie)
+        st.session_state.movies.append(new_movie)
+        return new_movie
+
+    def get_movie_stats(self):
+        if 'movie_stats' not in st.session_state:
+            st.session_state.movie_stats = self.movie_repository.get_movie_stats()
+        return st.session_state.movie_stats
