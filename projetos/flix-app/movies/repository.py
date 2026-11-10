@@ -14,7 +14,7 @@ class MovieRepository:
             'Authorization': f'Bearer {st.session_state.token}'
         }
 
-    def list_movies(self):
+    def get_movies(self):
         response = requests.get(
             url=self.__movies_url,
             headers=self.__headers,
@@ -35,6 +35,20 @@ class MovieRepository:
         )
 
         if response.status_code == 201:
+            return response.json()
+        if response.status_code == 401:
+            logout()
+            return None
+        raise Exception(f'Erro de API. Code: {response.status_code}')
+
+    def get_movie_stats(self):
+        stats_url = f'{self.__movies_url}stats/'
+        response = requests.get(
+            url=stats_url,
+            headers=self.__headers
+        )
+
+        if response.status_code == 200:
             return response.json()
         if response.status_code == 401:
             logout()
