@@ -27,6 +27,4 @@ class MovieService:
         return new_movie
 
     def get_movie_stats(self):
-        if 'movie_stats' not in st.session_state:
-            st.session_state.movie_stats = self.movie_repository.get_movie_stats()
-        return st.session_state.movie_stats
+        return self.movie_repository.get_movie_stats()
