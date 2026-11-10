@@ -11,10 +11,10 @@ class ReviewRepository:
     def __init__(self):
         self.__reviews_url = f'{BASE_URL}/reviews/'
         self.__headers = {
-            f'Authorization: Bearer {st.session_state.token}'
+            'Authorization': f'Bearer {st.session_state.token}'
         }
 
-    def list_reviews(self):
+    def get_reviews(self):
         response = requests.get(
             url=self.__reviews_url,
             headers=self.__headers
