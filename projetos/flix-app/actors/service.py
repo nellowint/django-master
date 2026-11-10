@@ -1,4 +1,6 @@
 
+import streamlit as st
+
 from actors.repository import ActorRepository
 
 
@@ -7,8 +9,10 @@ class ActorService:
     def __init__(self):
         self.actor_repository = ActorRepository()
 
-    def list_actors(self):
-        return self.actor_repository.list_actors()
+    def get_actors(self):
+        if 'actors' not in st.session_state:
+            st.session_state.actors = self.actor_repository.get_actors()
+        return st.session_state.actors
 
     def create_actor(self, name, birthday, nationality):
         actor = dict(
@@ -16,4 +20,6 @@ class ActorService:
             birthday=birthday,
             nationality=nationality,
         )
-        return self.actor_repository.create_actor(actor)
+        new_actor = self.actor_repository.create_actor(actor)
+        st.session_state.actors.append(new_actor)
+        return new_actor
